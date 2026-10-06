@@ -76,6 +76,65 @@ window.addEventListener('DOMContentLoaded',()=>{
 
   device-orientation-permission-ui="enabled:false">
 
+  <a-assets>
+
+    <img id="figureLeft"
+
+         src="./Figur_AR_links.png"
+
+         crossorigin="anonymous">
+
+    <img id="figureRight"
+
+         src="./Figur_AR_rechts.png"
+
+         crossorigin="anonymous">
+
+  </a-assets>
+
+  <a-camera
+
+    position="0 0 0"
+
+    look-controls="enabled:false">
+
+  </a-camera>
+
+  <a-entity id="target"
+
+            mindar-image-target="targetIndex:0">
+
+    <a-image
+
+      src="#figureLeft"
+
+      position="-0.215 0 0.01"
+
+      width="0.38"
+
+      height="0.484"
+
+      material="shader: flat; transparent: true; opacity: 1; side: double">
+
+    </a-image>
+
+    <a-image
+
+      src="#figureRight"
+
+      position="0.215 0 0.01"
+
+      width="0.38"
+
+      height="0.484"
+
+      material="shader: flat; transparent: true; opacity: 1; side: double">
+
+    </a-image>
+
+  </a-entity>
+
+</a-scene>
 <a-assets>
 
   <img id="figureLeft"
