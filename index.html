@@ -76,16 +76,21 @@ window.addEventListener('DOMContentLoaded',()=>{
 
   device-orientation-permission-ui="enabled:false">
 
-  <a-assets>
+<a-assets>
 
-    <img id="figureImage"
+  <img id="figureLeft"
 
-     src="./IMG_9838.png"
+       src="./Figur_AR_links.png"
 
-     crossorigin="anonymous">
+       crossorigin="anonymous">
 
-  </a-assets>
+  <img id="figureRight"
 
+       src="./Figur_AR_rechts.png"
+
+       crossorigin="anonymous">
+
+</a-assets>
   <a-camera
 
     position="0 0 0"
@@ -94,9 +99,37 @@ window.addEventListener('DOMContentLoaded',()=>{
 
   </a-camera>
 
-  <a-entity id="target"
+  <!-- linke Leinwand -->
 
-            mindar-image-target="targetIndex:0">
+<a-image
+
+  src="#figureLeft"
+
+  position="-0.235 0 0.01"
+
+  width="0.38"
+
+  height="0.484"
+
+  material="shader: flat; transparent: true; opacity: 1; side: double">
+
+</a-image>
+
+<!-- rechte Leinwand -->
+
+<a-image
+
+  src="#figureRight"
+
+  position="0.235 0 0.01"
+
+  width="0.38"
+
+  height="0.484"
+
+  material="shader: flat; transparent: true; opacity: 1; side: double">
+
+</a-image>
 
     <a-image
 
