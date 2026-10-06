@@ -78,7 +78,7 @@ window.addEventListener('DOMContentLoaded',()=>{
 </a-assets>
  <a-camera position="0 0 0" look-controls="enabled:false"></a-camera>
  <a-entity light="type:ambient;intensity:1.0"></a-entity>
-<a-image src="#figureImage" position="0 0 0.02" width="1.9" height="1.07" material="transparent:true; opacity:0.85; alphaTest:0.01" apparition></a-image>
+<a-image src="#figureImage" position="0 0 0.05" width="1.9" height="1.07" material="shader: flat; transparent: true; opacity: 1; side: double"></a-image>
 
  <a-entity id="target" mindar-image-target="targetIndex:0">
    <!-- Rotate into the diptych's vertical body axis; adjust after first real-world test if needed -->
