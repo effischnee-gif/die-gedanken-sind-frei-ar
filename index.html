@@ -73,6 +73,51 @@
       white-space: nowrap;
 
     }
+    const figure =
+
+  document.querySelector('#figure');
+
+let fadeTimer1;
+
+let fadeTimer2;
+
+function startFigureCycle() {
+
+  clearTimeout(fadeTimer1);
+
+  clearTimeout(fadeTimer2);
+
+  figure.setAttribute(
+
+    'material',
+
+    'opacity',
+
+    0
+
+  );
+
+  figure.emit('fadeIn');
+
+  // 5 Sekunden langsam erscheinen
+
+  // anschließend 4 Sekunden sichtbar bleiben
+
+  fadeTimer1 = setTimeout(() => {
+
+    figure.emit('fadeOut');
+
+  }, 9000);
+
+  // nach dem Verschwinden beginnt der Zyklus erneut
+
+  fadeTimer2 = setTimeout(() => {
+
+    startFigureCycle();
+
+  }, 14000);
+
+}
 
     /* Audio unten */
 
