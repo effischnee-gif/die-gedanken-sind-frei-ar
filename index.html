@@ -4,422 +4,285 @@
 
 <head>
 
-<meta charset="utf-8">
+  <meta charset="utf-8">
 
-<meta name="viewport"
+  <meta name="viewport"
 
-      content="width=device-width,initial-scale=1,viewport-fit=cover">
+        content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-<title>Die Gedanken sind frei – AR</title>
+  <title>Die Gedanken sind frei – AR</title>
 
-<script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
-<style>
+  <style>
 
-html,body{
+    html, body {
 
-  margin:0;
+      margin: 0;
 
-  width:100%;
+      width: 100%;
 
-  height:100%;
+      height: 100%;
 
-  overflow:hidden;
-
-}
-
-#status{
-
-  position:fixed;
-
-  top:max(16px,env(safe-area-inset-top));
-
-  left:50%;
-
-  transform:translateX(-50%);
-
-  z-index:9998;
-
-  color:white;
-
-  background:rgba(20,12,17,.55);
-
-  padding:7px 12px;
-
-  border-radius:20px;
-
-  font:13px -apple-system,BlinkMacSystemFont,sans-serif;
-
-  white-space:nowrap;
-
-}
-
-#audioPanel{
-
-  position:fixed;
-
-  left:50%;
-
-  bottom:max(24px,env(safe-area-inset-bottom));
-
-  transform:translateX(-50%);
-
-  z-index:9999;
-
-  display:none;
-
-  align-items:center;
-
-  gap:10px;
-
-  background:rgba(18,12,16,.72);
-
-  color:white;
-
-  padding:10px 14px;
-
-  border-radius:999px;
-
-  font:15px -apple-system,BlinkMacSystemFont,sans-serif;
-
-  backdrop-filter:blur(9px);
-
-  -webkit-backdrop-filter:blur(9px);
-
-}
-
-#audioButton{
-
-  border:0;
-
-  border-radius:999px;
-
-  padding:9px 14px;
-
-  background:white;
-
-  color:#111;
-
-  font-weight:600;
-
-  font-size:15px;
-
-}
-
-</style>
-
-<script>
-
-window.addEventListener('DOMContentLoaded',()=>{
-
-  const target =
-
-    document.querySelector('#target');
-
-  const figure =
-
-    document.querySelector('#figure');
-
-  const panel =
-
-    document.querySelector('#audioPanel');
-
-  const button =
-
-    document.querySelector('#audioButton');
-
-  const audio =
-
-    document.querySelector('#narration');
-
-  const status =
-
-    document.querySelector('#status');
-
-  let fadeTimer1 = null;
-
-  let fadeTimer2 = null;
-
-  let targetVisible = false;
-
-  /* FIGUREN-ANIMATION */
-
-  function startFigureCycle(){
-
-    if(!targetVisible) return;
-
-    clearTimeout(fadeTimer1);
-
-    clearTimeout(fadeTimer2);
-
-    /* Figur zunächst unsichtbar */
-
-    figure.setAttribute(
-
-      'material',
-
-      'opacity',
-
-      0
-
-    );
-
-    /* langsam erscheinen */
-
-    figure.emit('fadeIn');
-
-    /*
-
-      5 Sekunden erscheinen
-
-      + 4 Sekunden sichtbar
-
-    */
-
-    fadeTimer1 = setTimeout(()=>{
-
-      if(targetVisible){
-
-        figure.emit('fadeOut');
-
-      }
-
-    },9000);
-
-    /*
-
-      weitere 5 Sekunden verschwinden,
-
-      danach neuer Zyklus
-
-    */
-
-    fadeTimer2 = setTimeout(()=>{
-
-      if(targetVisible){
-
-        startFigureCycle();
-
-      }
-
-    },14000);
-
-  }
-
-  /* TARGET ERKANNT */
-
-  target.addEventListener('targetFound',()=>{
-
-    targetVisible = true;
-
-    status.textContent =
-
-      'Figur wird sichtbar';
-
-    panel.style.display =
-
-      'flex';
-
-    startFigureCycle();
-
-  });
-
-  /* TARGET VERLOREN */
-
-  target.addEventListener('targetLost',()=>{
-
-    targetVisible = false;
-
-    clearTimeout(fadeTimer1);
-
-    clearTimeout(fadeTimer2);
-
-    figure.setAttribute(
-
-      'material',
-
-      'opacity',
-
-      0
-
-    );
-
-    status.textContent =
-
-      'Suche das Diptychon …';
-
-    if(audio.paused){
-
-      panel.style.display='none';
+      overflow: hidden;
 
     }
 
-  });
+    #status {
 
-  /* AUDIO */
+      position: fixed;
 
-  button.addEventListener('click',async()=>{
+      top: max(16px, env(safe-area-inset-top));
 
-    if(audio.paused){
+      left: 50%;
 
-      try{
+      transform: translateX(-50%);
 
-        await audio.play();
+      z-index: 9998;
 
-        button.textContent =
+      color: white;
 
-          '❚❚ Pause';
+      background: rgba(20,12,17,0.55);
 
-      }
+      padding: 7px 12px;
 
-      catch(error){
+      border-radius: 20px;
 
-        console.log(
+      font: 13px -apple-system, BlinkMacSystemFont, sans-serif;
 
-          'Audio konnte nicht gestartet werden.',
-
-          error
-
-        );
-
-      }
+      white-space: nowrap;
 
     }
 
-    else{
+    #audioPanel {
 
-      audio.pause();
+      position: fixed;
 
-      button.textContent =
+      left: 50%;
 
-        '▶ Anhören';
+      bottom: max(24px, env(safe-area-inset-bottom));
+
+      transform: translateX(-50%);
+
+      z-index: 9999;
+
+      display: none;
+
+      align-items: center;
+
+      gap: 10px;
+
+      background: rgba(18,12,16,0.72);
+
+      color: white;
+
+      padding: 10px 14px;
+
+      border-radius: 999px;
+
+      font: 15px -apple-system, BlinkMacSystemFont, sans-serif;
+
+      backdrop-filter: blur(9px);
+
+      -webkit-backdrop-filter: blur(9px);
 
     }
 
-  });
+    #audioButton {
 
-  audio.addEventListener('ended',()=>{
+      border: 0;
 
-    button.textContent =
+      border-radius: 999px;
 
-      '▶ Noch einmal';
+      padding: 9px 14px;
 
-  });
+      background: white;
 
-});
+      color: #111;
 
-</script>
+      font-weight: 600;
+
+      font-size: 15px;
+
+    }
+
+  </style>
+
+  <script>
+
+    window.addEventListener('DOMContentLoaded', () => {
+
+      const target = document.querySelector('#target');
+
+      const panel = document.querySelector('#audioPanel');
+
+      const button = document.querySelector('#audioButton');
+
+      const audio = document.querySelector('#narration');
+
+      const status = document.querySelector('#status');
+
+      // TARGET ERKANNT
+
+      target.addEventListener('targetFound', () => {
+
+        status.textContent = 'Figur wird sichtbar';
+
+        panel.style.display = 'flex';
+
+      });
+
+      // TARGET VERLOREN
+
+      target.addEventListener('targetLost', () => {
+
+        status.textContent = 'Suche das Diptychon …';
+
+        if (audio.paused) {
+
+          panel.style.display = 'none';
+
+        }
+
+      });
+
+      // AUDIO STARTEN UND PAUSIEREN
+
+      button.addEventListener('click', async () => {
+
+        if (audio.paused) {
+
+          try {
+
+            await audio.play();
+
+            button.textContent = '❚❚ Pause';
+
+          } catch (error) {
+
+            console.log('Audio konnte nicht gestartet werden.', error);
+
+          }
+
+        } else {
+
+          audio.pause();
+
+          button.textContent = '▶ Anhören';
+
+        }
+
+      });
+
+      audio.addEventListener('ended', () => {
+
+        button.textContent = '▶ Noch einmal';
+
+      });
+
+    });
+
+  </script>
 
 </head>
 
 <body>
 
-<audio
+  <!-- AUDIO -->
 
-  id="narration"
+  <audio id="narration" preload="auto" playsinline>
 
-  preload="auto"
+    <source
 
-  playsinline>
+      src="./Die_Gedanken_sind_frei_Audio.m4a"
 
-  <source
+      type="audio/mp4">
 
-    src="./Die_Gedanken_sind_frei_Audio.m4a"
+  </audio>
 
-    type="audio/mp4">
+  <!-- STATUS -->
 
-</audio>
+  <div id="status">Suche das Diptychon …</div>
 
-<div id="status">
+  <!-- AUDIO-BUTTON -->
 
-  Suche das Diptychon …
+  <div id="audioPanel">
 
-</div>
+    <button id="audioButton">▶ Anhören</button>
 
-<div id="audioPanel">
+    <span>Die Gedanken sind frei</span>
 
-  <button id="audioButton">
+  </div>
 
-    ▶ Anhören
+  <!-- AR-SZENE -->
 
-  </button>
+  <a-scene
 
-  <span>
+    mindar-image="imageTargetSrc: ./targets.mind; maxTrack: 1; uiLoading: yes; uiScanning: yes; uiError: yes"
 
-    Die Gedanken sind frei
+    color-space="sRGB"
 
-  </span>
+    renderer="colorManagement: true"
 
-</div>
+    vr-mode-ui="enabled: false"
 
-<a-scene
+    device-orientation-permission-ui="enabled: false">
 
-  mindar-image="
+    <!-- PNG-DATEI -->
 
-    imageTargetSrc: ./targets.mind;
+    <a-assets>
 
-    maxTrack: 1;
+      <img
 
-    uiLoading: yes;
+        id="figureFinal"
 
-    uiScanning: yes;
+        src="./Figur_AR_final.png"
 
-    uiError: yes"
+        crossorigin="anonymous">
 
-  color-space="sRGB"
+    </a-assets>
 
-  renderer="colorManagement: true"
+    <!-- KAMERA -->
 
-  vr-mode-ui="enabled:false"
+    <a-camera
 
-  device-orientation-permission-ui="enabled:false">
+      position="0 0 0"
 
-  <a-assets>
+      look-controls="enabled: false">
 
-    <img
+    </a-camera>
 
-      id="figureFinal"
+    <!-- ERKANNTES DIPTYCHON -->
 
-      src="./Figur_AR_final.png"
+    <a-entity
 
-      crossorigin="anonymous">
+      id="target"
 
-  </a-assets>
+      mindar-image-target="targetIndex: 0">
 
-  <a-camera
+      <!-- FIGUR: TESTPOSITION UND TESTGRÖSSE -->
 
-    position="0 0 0"
+      <a-image
 
-    look-controls="enabled:false">
+        id="figure"
 
-  </a-camera>
+        src="#figureFinal"
 
-  <a-entity
+        position="0 0 0.05"
 
-    id="target"
+        width="0.43"
 
-    mindar-image-target="targetIndex:0">
+        height="0.242"
 
-    <a-image
+        material="shader: flat; transparent: true; opacity: 1; side: double">
 
-  id="figure"
+      </a-image>
 
-  src="#figureFinal"
+    </a-entity>
 
-  position="0 0 0.05"
-
-  width="0.43"
-
-  height="0.242"
-
-  material="shader: flat; transparent: true; opacity: 1; side: double">
-
-</a-image>
-  </a-entity>
-
-</a-scene>
+  </a-scene>
 
 </body>
 
