@@ -112,9 +112,117 @@
 
   <script>
 
+    // Animation:
+
+    // 8 Sekunden erscheinen
+
+    // 40 Sekunden sichtbar
+
+    // 8 Sekunden verschwinden
+
+    // Danach Wiederholung
+
+    AFRAME.registerComponent('figure-cycle', {
+
+      init: function () {
+
+        this.startTime = null;
+
+        this.active = false;
+
+        this.materialReady = false;
+
+        this.el.addEventListener('materialtextureloaded', () => {
+
+          this.materialReady = true;
+
+        });
+
+        this.el.setAttribute('material', 'opacity', 0);
+
+      },
+
+      playCycle: function () {
+
+        this.active = true;
+
+        this.startTime = null;
+
+        this.el.setAttribute('material', 'opacity', 0);
+
+      },
+
+      stopCycle: function () {
+
+        this.active = false;
+
+        this.startTime = null;
+
+        this.el.setAttribute('material', 'opacity', 0);
+
+      },
+
+      tick: function (time) {
+
+        if (!this.active) return;
+
+        // Erst beginnen, wenn die Textur geladen ist.
+
+        const mesh = this.el.getObject3D('mesh');
+
+        if (!mesh) return;
+
+        if (this.startTime === null) {
+
+          this.startTime = time;
+
+        }
+
+        const duration = 56000;
+
+        const elapsed = (time - this.startTime) % duration;
+
+        let opacity;
+
+        if (elapsed < 8000) {
+
+          // Langsam erscheinen
+
+          const p = elapsed / 8000;
+
+          const eased = p * p * (3 - 2 * p);
+
+          opacity = 0.9 * eased;
+
+        } else if (elapsed < 48000) {
+
+          // 40 Sekunden sichtbar bleiben
+
+          opacity = 0.9;
+
+        } else {
+
+          // Langsam verschwinden
+
+          const p = (elapsed - 48000) / 8000;
+
+          const eased = p * p * (3 - 2 * p);
+
+          opacity = 0.9 * (1 - eased);
+
+        }
+
+        this.el.setAttribute('material', 'opacity', opacity);
+
+      }
+
+    });
+
     window.addEventListener('DOMContentLoaded', () => {
 
       const target = document.querySelector('#target');
+
+      const figure = document.querySelector('#figure');
 
       const panel = document.querySelector('#audioPanel');
 
@@ -124,7 +232,7 @@
 
       const status = document.querySelector('#status');
 
-      // TARGET ERKANNT
+      // DIPTYCHON ERKANNT
 
       target.addEventListener('targetFound', () => {
 
@@ -132,11 +240,15 @@
 
         panel.style.display = 'flex';
 
+        figure.components['figure-cycle'].playCycle();
+
       });
 
-      // TARGET VERLOREN
+      // DIPTYCHON VERLOREN
 
       target.addEventListener('targetLost', () => {
+
+        figure.components['figure-cycle'].stopCycle();
 
         status.textContent = 'Suche das Diptychon …';
 
@@ -148,7 +260,7 @@
 
       });
 
-      // AUDIO STARTEN UND PAUSIEREN
+      // AUDIO
 
       button.addEventListener('click', async () => {
 
@@ -230,7 +342,7 @@
 
     device-orientation-permission-ui="enabled: false">
 
-    <!-- PNG-DATEI -->
+    <!-- PNG -->
 
     <a-assets>
 
@@ -254,7 +366,7 @@
 
     </a-camera>
 
-    <!-- ERKANNTES DIPTYCHON -->
+    <!-- DIPTYCHON -->
 
     <a-entity
 
@@ -262,52 +374,26 @@
 
       mindar-image-target="targetIndex: 0">
 
-      <!-- FIGUR: TESTPOSITION UND TESTGRÖSSE -->
+      <!-- FIGUR -->
 
       <a-image
 
-  id="figure"
+        id="figure"
 
-  src="#figureFinal"
+        src="#figureFinal"
 
-  position="0.015 -0.035 0.05"
+        position="0.045 -0.035 0.05"
 
-  width="0.56"
+        width="0.56"
 
-  height="0.315"
+        height="0.315"
 
-  material="shader: flat; transparent: true; opacity: 0; side: double; depthWrite: false"
+        material="shader: flat; transparent: true; opacity: 0; side: double; depthWrite: false"
 
-  animation__appear="
+        figure-cycle>
 
-    property: material.opacity;
+      </a-image>
 
-    from: 0;
-
-    to: 0.9;
-
-    dur: 8000;
-
-    easing: easeInOutSine;
-
-    startEvents: fadeIn"
-
-  animation__disappear="
-
-    property: material.opacity;
-
-    from: 0.9;
-
-    to: 0;
-
-    dur: 8000;
-
-    easing: easeInOutSine;
-
-    startEvents: fadeOut">
-
-</a-image> 
-      
     </a-entity>
 
   </a-scene>
